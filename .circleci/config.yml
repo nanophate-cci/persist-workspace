@@ -1,0 +1,29 @@
+version: 2.1
+jobs:
+  build:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: small
+    steps:
+      - checkout
+      - run: echo "Hello"
+      - run: mkdir naaa
+      - persist_to_workspace:
+          root: /home/circleci/
+          paths: naaa
+  downstream:        
+    machine:
+      image: ubuntu-2004:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /home/circleci/
+      - run: ls -la
+
+workflows:
+  btd:
+    jobs:
+      - build
+      - downstream:
+          requires:
+            - build
